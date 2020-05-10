@@ -1,19 +1,14 @@
-FROM centos
+FROM redhat/rhel7
+MAINTAINER "Scott Collier" <scollier@redhat.com>
 
-MAINTAINER aksarav@middlewareinventory.com
+RUN yum -y update; yum clean all
+RUN yum -y install httpd; yum clean all
+RUN echo "Apache" >> /var/www/html/index.html
 
-RUN mkdir /opt/tomcat/
+EXPOSE 80
 
-WORKDIR /opt/tomcat
-RUN curl -O https://www-eu.apache.org/dist/tomcat/tomcat-8/v8.5.40/bin/apache-tomcat-8.5.40.tar.gz
-RUN tar xvfz apache*.tar.gz
-RUN mv apache-tomcat-8.5.40/* /opt/tomcat/.
-RUN yum -y install java
-RUN java -version
+# Simple startup script to avoid some issues observed with container restart 
+ADD run-apache.sh /run-apache.sh
+RUN chmod -v +x /run-apache.sh
 
-WORKDIR /opt/tomcat/webapps
-RUN curl -O -L https://github.com/AKSarav/SampleWebApp/raw/master/dist/SampleWebApp.war
-
-EXPOSE 8080
-
-CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+CMD ["/run-apache.sh"]
