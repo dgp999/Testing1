@@ -1,14 +1,27 @@
-FROM centos
-MAINTAINER "Scott Collier" <scollier@redhat.com>
+# Get the base image
 
-RUN yum -y update; yum clean all
-RUN yum -y install httpd; yum clean all
-RUN echo "Apache" >> /var/www/html/index.html
+FROM ubuntu:16.04
 
-EXPOSE 80
+# Install all packages
 
-# Simple startup script to avoid some issues observed with container restart 
-ADD run-apache.sh /run-apache.sh
-RUN chmod -v +x /run-apache.sh
+RUN \
 
-CMD ["/run-apache.sh"]
+apt-get update && \
+
+apt-get -y upgrade && \
+
+apt-get install -y apache2 && \
+
+# adding some content for Apache server
+
+RUN echo “This is a test docker” > /var/www/html/index.html
+
+# Copying setting file & adding some content to be served by apache
+
+COPY data/httpd.conf /etc/apache2/httpd.conf
+
+# Defining a command to be run after the docker is up
+
+ENTRYPOINT [“elinks”]
+
+CMD [“localhost”]
