@@ -1,4 +1,4 @@
-FROM redhat/rhel7
+FROM centos
 MAINTAINER "Scott Collier" <scollier@redhat.com>
 
 RUN yum -y update; yum clean all
