@@ -1,13 +1,12 @@
-# Get the base image
+# Super simple example of a Dockerfile
+#
+FROM ubuntu:latest
+MAINTAINER Andrew Odewahn "odewahn@oreilly.com"
 
-FROM ubuntu:16.04
+RUN apt-get update
+RUN apt-get install -y python python-pip wget
+RUN pip install Flask
 
-# Install all packages
+ADD hello.py /home/hello.py
 
-RUN \
-
-apt-get update && \
-
-apt-get -y upgrade && \
-
-apt-get install -y apache2 && \
+WORKDIR /home
